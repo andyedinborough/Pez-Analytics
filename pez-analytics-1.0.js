@@ -1,10 +1,10 @@
-(function($) {
+(function(window, $) {
 	var a = function(b) {
 		var _a = this;
 		var _b = b || {};
 		var _id = _b.id;
 		var _debug = _b.debug;
-		var _gaq = [];
+		var _gaq = window._gaq;
 		var _log = function(e) {
 			if (_debug) log(e);
 		};
@@ -88,9 +88,13 @@
 			});
 		};
 		(function() {
-			_gaq = window._gaq = window._gaq || [];
-			_gaq.push(['_setAccount', _id]);
-			_gaq.push(['_trackPageview']);
+			_gaq = _gaq || [
+				['_setAccount', _id],
+				['_trackPageview']
+			];
+			if(_b.trackPageLoadTime){
+				_gaq.push(['_trackPageLoadTime']);
+			}
 			var src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
 			var tag = document.createElement('script');
 			tag.type = 'text/javascript';
@@ -113,10 +117,11 @@
 			debug: metaTag.attr('data-debug') === 'true',
 			trackDownloads: metaTag.attr('data-trackDownloads'),
 			trackOutboundLinks: metaTag.attr('data-trackOutboundLinks'),
-			trackForms: metaTag.attr('data-trackForms')
+			trackForms: metaTag.attr('data-trackForms'),
+			trackPageLoadTime: metaTag.attr('data-trackPageLoadTime')
 		});	
 	});
-})(jQuery);
+})(window, jQuery);
 
 window.log = function(){
 	log.history = log.history || [];
